@@ -21,6 +21,34 @@ public class SecurityAppConfig {
 	@Bean
 	InMemoryUserDetailsManager setUpUsers() {
 		
+		UserDetails john = 	
+				User.withUsername("john")
+				.password("{noop}john")
+				.roles("user")
+				.build();
+	
+		UserDetails admin = 	
+			User.withUsername("admin")
+				.password("{noop}admin")
+				.roles("user", "admin")
+				.build();
+		
+		/*
+		InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
+		userDetailsManager.createUser(john);
+		userDetailsManager.createUser(admin);
+		
+		return userDetailsManager;
+		*/
+		
+		return new InMemoryUserDetailsManager(john, admin);
+	}
+	
+
+/*	
+	@Bean
+	InMemoryUserDetailsManager setUpUsers() {
+		
 		GrantedAuthority role1 = new SimpleGrantedAuthority("user");
 		GrantedAuthority role2 = new SimpleGrantedAuthority("admin");
 		
@@ -34,10 +62,13 @@ public class SecurityAppConfig {
 		return userDetailsManager;
 		
 	}
+*/
 	
+/*
 	@SuppressWarnings("deprecation")
 	@Bean
 	PasswordEncoder noOpPasswordEncoder() {
 		return NoOpPasswordEncoder.getInstance();
 	}
-} 
+*/
+}
