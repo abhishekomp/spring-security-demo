@@ -8,6 +8,8 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 	protected Class<?>[] getRootConfigClasses() {
 		// TODO Auto-generated method stub
 		return null;
+		//below leads to app not starting in my case.
+		//return new Class[] { SecurityConfiguration.class };
 	}
 
 	@Override
