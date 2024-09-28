@@ -15,5 +15,10 @@ public class HiController {
 	String sayHello() {
 		return "hello everyone";
 	}
+	
+	@GetMapping("/admin")
+	String adminEndPoint() {
+		return "hello everyone, this is admin page";
+	}
 
 }
