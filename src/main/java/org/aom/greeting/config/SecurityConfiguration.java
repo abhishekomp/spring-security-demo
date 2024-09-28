@@ -28,6 +28,13 @@ public class SecurityConfiguration {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+		/*
+		 * This means the following (accessed via browser):
+		 * a) /hello endpoint can be accessed by authenticated user only.
+		 * b) /admin endpoint can be accessed by authenticated user with Role = ADMIN
+		 * c) /bye endpoint can be accessed by authenticated user with either of the two roles (USER, ADMIN)
+		 * d) Any endpoint (path) not matching any of the above rules can be accessed by any user.
+		 */
 		http.authorizeHttpRequests((authorize) -> authorize
 				.requestMatchers("/hello").authenticated()
 				.requestMatchers("/admin").hasRole("ADMIN")
