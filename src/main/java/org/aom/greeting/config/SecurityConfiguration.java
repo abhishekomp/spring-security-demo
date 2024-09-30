@@ -2,6 +2,7 @@ package org.aom.greeting.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -29,19 +30,22 @@ public class SecurityConfiguration {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		/*
+		 * Note: these rules should be defined from most specific to most general, so when nothing along the way matches, the last rule is applied. 
 		 * This means the following (accessed via browser):
-		 * a) /hello endpoint can be accessed by authenticated user only.
-		 * b) /admin endpoint can be accessed by authenticated user with Role = ADMIN
-		 * c) /bye endpoint can be accessed by authenticated user with either of the two roles (USER, ADMIN)
-		 * d) Any endpoint (path) not matching any of the above rules can be accessed by any user.
+		 * -> A POST request at /hello end point can be accessed by authenticated user with Role = ADMIN.
+		 * -> /admin can be accessed by authenticated user with Role = ADMIN.
+		 * -> /bye endpoint can be accessed by authenticated user with either of the two roles (USER, ADMIN)
+		 * -> /hi and /login end points can be accessed by anyone without authentication.
+		 * -> Any other end point requires authentication.
 		 */
-		http.authorizeHttpRequests((authorize) -> authorize
-				.requestMatchers("/hello").authenticated()
+		http.authorizeHttpRequests((authorize) -> authorize				
+				.requestMatchers(HttpMethod.POST, "/hello").hasRole("ADMIN")
 				.requestMatchers("/admin").hasRole("ADMIN")
 				.requestMatchers("/bye").hasAnyRole("USER", "ADMIN")
-				.requestMatchers("/**", "/hi", "/login").permitAll())
-				.formLogin(withDefaults())
-				.httpBasic(withDefaults());
+				.requestMatchers("/index*", "/hi", "/login").permitAll()
+				.anyRequest().authenticated())				
+			.formLogin(withDefaults())
+			.httpBasic(withDefaults());
 
 		return http.build();
 	}
