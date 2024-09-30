@@ -37,8 +37,9 @@ public class SecurityConfiguration {
 		 * -> /bye endpoint can be accessed by authenticated user with either of the two roles (USER, ADMIN)
 		 * -> /hi and /login end points can be accessed by anyone without authentication.
 		 * -> Any other end point requires authentication.
+		 * Note: From Spring 6 /admin path and /admin/ path will not be considered same.
 		 */
-		http.authorizeHttpRequests((authorize) -> authorize				
+		http.authorizeHttpRequests((authorize) -> authorize	
 				.requestMatchers(HttpMethod.POST, "/hello").hasRole("ADMIN")
 				.requestMatchers("/admin").hasRole("ADMIN")
 				.requestMatchers("/bye").hasAnyRole("USER", "ADMIN")
