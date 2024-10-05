@@ -23,6 +23,8 @@ public class SecurityConfiguration {
 		UserDetails john = User.withUsername("john").password("{noop}john").roles("USER").build();
 		UserDetails admin = User.withUsername("admin").password("{noop}admin").roles("USER", "ADMIN").build();
 
+		
+		//invoking the InMemoryUserDetailsManager constructor with UserDetails object instances will internally call the create method to store the users in the memory.
 		return new InMemoryUserDetailsManager(john, admin);
 	}
 
@@ -43,7 +45,8 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.POST, "/hello").hasRole("ADMIN")
 				.requestMatchers("/admin").hasRole("ADMIN")
 				.requestMatchers("/bye").hasAnyRole("USER", "ADMIN")
-				.requestMatchers("/index*", "/hi", "/login").permitAll()
+				.requestMatchers("/WEB-INF/view/**", "/static/**").permitAll()
+				.requestMatchers("/index*", "/hi", "/login", "/register").permitAll()
 				.anyRequest().authenticated())				
 			.formLogin(withDefaults())
 			.httpBasic(withDefaults());
